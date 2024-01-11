@@ -1,0 +1,262 @@
+Prem Raj
+1NT20IS121
+
+XML code:
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+tools:context=".MainActivity" >
+<EditText
+android:id="@+id/editTextTextPersonName"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:ems="10"
+android:inputType="textPersonName"
+tools:ignore="SpeakableTextPresentCheck"
+android:text="Enter the details below"/>
+<EditText
+android:id="@+id/name"
+android:layout_width="match_parent"
+android:layout_height="57dp"
+android:ems="10"
+android:inputType="textPersonName"
+android:text="Name" />
+<EditText
+android:id="@+id/contact"
+android:layout_width="match_parent"
+android:layout_height="65dp"
+android:ems="10"
+android:inputType="textPersonName"
+android:text="contact" />
+<EditText
+android:id="@+id/age"
+android:layout_width="match_parent"
+android:layout_height="81dp"
+android:ems="10"
+android:inputType="textPersonName"
+android:text="age" />
+<Button
+
+android:id="@+id/btnInsert"
+android:layout_width="match_parent"
+android:layout_height="89dp"
+android:text="Insert" />
+<Button
+android:id="@+id/btnUpdate"
+android:layout_width="match_parent"
+android:layout_height="88dp"
+android:text="Update" />
+<Button
+android:id="@+id/btnDelete"
+android:layout_width="match_parent"
+android:layout_height="99dp"
+android:text="Delete" />
+<Button
+android:id="@+id/btnView"
+android:layout_width="match_parent"
+android:layout_height="81dp"
+android:text="View" />
+
+</LinearLayout>
+
+Java Code
+package com.example.ankitdb;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+public class MainActivity extends AppCompatActivity {
+EditText name, contact, age;
+Button insert, update, delete, view;
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+
+super.onCreate(savedInstanceState);
+setContentView(R.layout.activity_main);
+name = findViewById(R.id.name);
+contact = findViewById(R.id.contact);
+age = findViewById(R.id.age);
+insert = findViewById(R.id.btnInsert);
+update = findViewById(R.id.btnUpdate);
+delete = findViewById(R.id.btnDelete);
+view = findViewById(R.id.btnView);
+DBHelper DB = new DBHelper(this);
+insert.setOnClickListener(new OnClickListener() {
+@Override
+public void onClick(View v) {
+String nameTXT = name.getText().toString();
+String contactTXT = contact.getText().toString();
+String ageTXT = age.getText().toString();
+boolean qryStatus = DB.insertData(nameTXT, contactTXT, ageTXT);
+if (qryStatus == true)
+Toast.makeText(MainActivity.this, "New record created",
+Toast.LENGTH_SHORT).show();
+else
+Toast.makeText(MainActivity.this, "new record creation
+failed", Toast.LENGTH_SHORT).show();
+
+}
+});
+update.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) {
+String nameTXT = name.getText().toString();
+String contactTXT = contact.getText().toString();
+String ageTXT = age.getText().toString();
+boolean qryStatus = DB.updateData(nameTXT, contactTXT, ageTXT);
+if (qryStatus == true)
+Toast.makeText(MainActivity.this, "record updated",
+Toast.LENGTH_SHORT).show();
+else
+Toast.makeText(MainActivity.this, " record updation
+failed", Toast.LENGTH_SHORT).show();
+
+}
+
+});
+delete.setOnClickListener(new OnClickListener() {
+@Override
+public void onClick(View v) {
+String nameTXT = name.getText().toString();
+boolean qryStatus = DB.deleteData(nameTXT);
+if (qryStatus == true)
+Toast.makeText(MainActivity.this, " record deleted",
+Toast.LENGTH_SHORT).show();
+else
+Toast.makeText(MainActivity.this, " record deletion
+failed", Toast.LENGTH_SHORT).show();
+
+}
+});
+view.setOnClickListener(new View.OnClickListener() {
+StringBuffer buffer;
+@Override
+public void onClick(View v) {
+Cursor res = DB.viewData();
+if (res.getCount() == 0)
+Toast.makeText(MainActivity.this, "No record exist",
+Toast.LENGTH_SHORT).show();
+else {
+buffer = new StringBuffer();
+while (res.moveToNext()) {
+buffer.append("Name : " + res.getString(0) + "\n");
+buffer.append("Contact : " + res.getString(1) + "\n");
+buffer.append("Age : " + res.getString(2) + "\n");
+}
+AlertDialog.Builder builder = new
+AlertDialog.Builder(MainActivity.this);
+builder.setCancelable(true);
+builder.setTitle("User data");
+builder.setMessage(buffer.toString());
+builder.show();
+}
+}
+});
+}
+}
+
+Java code for DBHelper:
+
+package com.example.ankitdb;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import androidx.annotation.Nullable;
+public class DBHelper extends SQLiteOpenHelper
+{
+public DBHelper(@Nullable Context context) {
+super(context, "Userdata.db", null, 1);
+}
+@Override
+public void onCreate(SQLiteDatabase db) {
+db.execSQL("create TABLE UserDetails(name TEXT primary key ,contact
+TEXT,age TEXT)");
+}
+@Override
+public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+db.execSQL("drop Table if exists Userdetails");
+}
+public boolean insertData(String name,String contact,String age)
+{
+SQLiteDatabase db=this.getWritableDatabase();
+ContentValues contentValues=new ContentValues();
+contentValues.put("name",name);
+contentValues.put("contact",contact);
+contentValues.put("age",age);
+long result=db.insert("Userdetails",null,contentValues);
+if(result==-1)
+{
+return false;
+}
+else
+{
+return true;
+}
+}
+public boolean updateData(String name,String contact,String age)
+{
+SQLiteDatabase db=this.getWritableDatabase();
+ContentValues contentValues=new ContentValues();
+
+contentValues.put("name",name);
+contentValues.put("contact",contact);
+contentValues.put("age",age);
+Cursor cursor=db.rawQuery("Select * from Userdetails where name=?",new
+String[]{name});
+if(cursor.getCount()>0) {
+long result = db.update("Userdetails", contentValues, "name=?", new
+String[]{name});
+
+if (result == -1) {
+return false;
+} else {
+return true;
+}
+}
+else
+{
+return false;
+}
+}
+
+public boolean deleteData(String name)
+{
+SQLiteDatabase db=this.getWritableDatabase();
+ContentValues contentValues=new ContentValues();
+Cursor cursor=db.rawQuery("Select * from Userdetails where name=?",new
+String[]{name});
+if(cursor.getCount()>0) {
+long result = db.delete("Userdetails", "name=?", new String[]{name});
+if (result == -1) {
+return false;
+} else {
+return true;
+}
+}
+else
+{
+return false;
+}
+}
+public Cursor viewData()
+{
+SQLiteDatabase db=this.getWritableDatabase();
+Cursor cursor=db.rawQuery("Select * from Userdetails",null);
+return cursor;
+
+}
+}
+
+

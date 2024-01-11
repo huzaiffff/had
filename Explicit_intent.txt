@@ -1,0 +1,170 @@
+Androidmanifest.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        tools:targetApi="31">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Resultactivity" />
+    </application>
+
+</manifest>
+
+
+Resultactivity.java
+
+package com.example.huz4;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class Resultactivity extends AppCompatActivity {
+
+    private TextView textViewResult;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main2);
+
+        textViewResult = findViewById(R.id.textView);
+
+        // Retrieve the numbers from the intent
+        Intent intent = getIntent();
+        double number1 = intent.getDoubleExtra("number1", 0);
+        double number2 = intent.getDoubleExtra("number2", 0);
+
+        // Calculate the sum
+        double sum = number1 + number2;
+
+        // Display the result in the TextView
+        textViewResult.setText("Sum: " + sum);
+    }
+}
+
+
+
+MainActivity.java
+
+package com.example.huz4;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText editTextNumber1;
+    private EditText editTextNumber2;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        editTextNumber1 = findViewById(R.id.editTextNumber1);
+        editTextNumber2 = findViewById(R.id.editTextNumber2);
+    }
+
+    public void calculateSum(View view) {
+        String number1 = editTextNumber1.getText().toString();
+        String number2 = editTextNumber2.getText().toString();
+
+        // Check if both fields are not empty
+        if (!number1.isEmpty() && !number2.isEmpty()) {
+            // Create an explicit intent to start ResultActivity
+            Intent intent = new Intent(this, Resultactivity.class);
+
+            // Pass the numbers as extras to the intent
+            intent.putExtra("number1", Double.parseDouble(number1));
+            intent.putExtra("number2", Double.parseDouble(number2));
+
+            // Start the ResultActivity
+            startActivity(intent);
+        }
+    }
+}
+
+
+
+activity_main2.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Resultactivity">
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="361dp"
+        android:layout_height="250dp"
+        android:text="TextView" />
+</RelativeLayout>
+
+
+activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/editTextNumber1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter number 1"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp" />
+
+    <EditText
+        android:id="@+id/editTextNumber2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter number 2"
+        android:inputType="numberDecimal"
+        android:layout_below="@id/editTextNumber1"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp" />
+
+    <Button
+        android:id="@+id/btnCalculate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Calculate Sum"
+        android:layout_below="@id/editTextNumber2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:onClick="calculateSum" />
+</RelativeLayout>

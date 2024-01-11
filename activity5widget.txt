@@ -1,0 +1,142 @@
+xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btnLoadWebPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Load OpenAI Website"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:onClick="loadWebPage" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello, Widgets!"
+        android:textSize="18sp"
+        android:layout_below="@id/btnLoadWebPage"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Type something..."
+        android:inputType="text"
+        android:layout_below="@id/textView"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/editText"
+        android:layout_marginTop="23dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/image1" />
+
+
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/imageView"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"/>
+
+    <!-- ConstraintLayout TextView from the second project -->
+</RelativeLayout>
+
+
+package com.example.badrilovebadri;
+
+import android.os.Bundle;
+import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast; // Add this import for Toast
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private WebView webView;
+    private EditText editText;
+    private TextView textView;
+    private ImageView imageView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Your existing code for initializing views
+        webView = findViewById(R.id.webView);
+        editText = findViewById(R.id.editText);
+        textView = findViewById(R.id.textView);
+        imageView = findViewById(R.id.imageView);
+
+        // Toast from the second project
+        Toast.makeText(getApplicationContext(), "created", Toast.LENGTH_LONG).show();
+    }
+
+    // Your existing methods for loading web page
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Toast.makeText(getApplicationContext(), "started", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Toast.makeText(getApplicationContext(), "paused", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Toast.makeText(getApplicationContext(), "resumed", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Toast.makeText(getApplicationContext(), "Destroyed", Toast.LENGTH_LONG).show();
+    }
+    public void loadWebPage(View view) {
+        String url = "https://www.google.com"; // Change this URL to the desired website
+
+        // Load the web page in the WebView
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewClient());
+        webView.loadUrl(url);
+
+        // Update the TextView with a message
+        textView.setText("Loading " + url);
+
+        // Load an image in the ImageView (replace R.drawable.ic_launcher_foreground with your image)
+        imageView.setImageResource(R.drawable.image1);
+    }
+
+}
