@@ -1,5 +1,3 @@
-Prem Raj
-1NT20IS121
 
 XML code:
 <?xml version="1.0" encoding="utf-8"?>
